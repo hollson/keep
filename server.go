@@ -7,12 +7,12 @@ package main
 import (
     "os"
 
-    "github.com/hollson/team/team"
+    "github.com/hollson/team/server"
     "github.com/sirupsen/logrus"
 )
 
 func main() {
-    server, err := team.NewServer()
+    server, err := server.NewServer()
     if err != nil {
         logrus.Errorln(err)
         os.Exit(1)
