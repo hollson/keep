@@ -5,9 +5,9 @@
 package server
 
 import (
+    "context"
     "fmt"
     "net"
-    "time"
 
     "github.com/hollson/team/lib/tcpkeepalive"
     "github.com/sirupsen/logrus"
@@ -16,17 +16,15 @@ import (
 var _running = false
 
 // 监听器
-type TeamListener interface {
-    // Route()
+type TeamServer interface {
     Run()
     Close() error
 }
 
-type Group interface {
-    AllotGroupHash() int // 分配心跳监听组的端口号
-}
+// 处理程序
+type TeamHandlerFunc func(ctx context.Context)
 
-// TeamServer
+// teamar
 type server struct {
     Listener          *net.TCPListener   // 监听地址
     Clients           map[string]*client // 客户端
@@ -41,7 +39,7 @@ type client struct {
     conn *tcpkeepalive.Conn
 }
 
-//  创建TCP监听器
+//  创建Team监听服务器
 //  默认TcpAddr为： 0.0.0.0:54321
 func NewServer(option ...Option) (*server, error) {
     tcpAddr, err := net.ResolveTCPAddr("tcp4", ":4321")
@@ -73,37 +71,15 @@ func NewServer(option ...Option) (*server, error) {
 // 启动监听服务
 func (s *server) Run() {
     logrus.Infoln("「Team Editor」TCP监听服务已启动：", s.Listener.Addr().String())
-    for {
-        // 创建客户端连接
-        conn, err := s.Listener.AcceptTCP()
-        if err != nil {
-            logrus.Errorf("accept client err,%v", err)
-            continue
-        }
-
-        kaConn, err := tcpkeepalive.EnableKeepAlive(conn)
-        if err != nil {
-            s.Offline(kaConn, 2)
-            break
-        }
-
-        // todo
-        kaConn.SetKeepAliveIdle(time.Duration(s.KeepAliveIdle) * time.Second)
-        kaConn.SetKeepAliveCount(s.KeepAliveCount)
-        kaConn.SetKeepAliveInterval(time.Duration(s.KeepAliveInterval) * time.Second)
-        //
-        // s.Clients[conn.RemoteAddr().String()] = &client{conn: kaConn}
-        // logrus.Infof("%s 已上线,当前在线人数：%d", conn.RemoteAddr().String(), len(s.Clients))
-        go s.messageHandler(kaConn)
-    }
-}
-
-// 路由
-func Route() {
-
+    s.TcpAllot() // 客户长连接分配器
 }
 
 // 关闭监听器(一般情况下只需中断应用)
 func (s *server) Close() error {
     return s.Listener.Close()
+}
+
+// 路由
+func Route() {
+
 }

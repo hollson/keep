@@ -20,7 +20,7 @@ var nickname string
 var action uint8
 
 //go:generate go run client.go
-func main() {
+func Run() {
     TcpAdd, _ := net.ResolveTCPAddr("tcp", ":4321")
     conn, err := net.DialTCP("tcp", nil, TcpAdd)
     if err != nil {
@@ -72,7 +72,7 @@ func TcpWriter(conn *net.TCPConn) {
             Group:     111,
             Timestamp: time.Now().Unix(),
             Sign:      "xxxx",
-            Action:    pb.ReqAction(action),
+            Uri:       pb.ReqAction(action),
             Receiver:  "BBB",
             Size:      0,
             Data:      []byte(msg),

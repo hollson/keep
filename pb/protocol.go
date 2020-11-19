@@ -17,15 +17,15 @@ const (
 )
 
 type Request struct {
-    UUID      string    `json:"uuid"`      // 用户编号(OpenId)
-    Group     int64     `json:"group"`     // 群组ID(多人协作项目ID)
-    Timestamp int64     `json:"timestamp"` // 时间戳
-    Serial    int64     `json:"serial"`    // 序列号(请求与响应配对)
-    Sign      string    `json:"sign"`      // 签名(校验身份)
-    Action    ReqAction `json:"action"`    // 操作类型（登录，群发，私发，溯源，op1，op2）
-    Receiver  string    `json:"receiver"`  // 接收者(群组ID[群发]或个人UUID[私发])
-    Size      int32     `json:"size"`      // 报文大小
-    Data      []byte    `json:"data"`      // 数据内容
+    Uri       string `json:"uri"`       // ReqAction `json:"action"`    // 操作类型（登录，群发，私发，溯源，op1，op2）
+    UUID      string `json:"uuid"`      // 用户编号(OpenId)
+    Group     int64  `json:"group"`     // 群组ID(多人协作项目ID)
+    Timestamp int64  `json:"timestamp"` // 时间戳
+    Serial    int64  `json:"serial"`    // 序列号(请求与响应配对)
+    Sign      string `json:"sign"`      // 签名(校验身份)
+    Receiver  string `json:"receiver"`  // 接收者(群组ID[群发]或个人UUID[私发])
+    Size      int32  `json:"size"`      // 报文大小
+    Data      []byte `json:"data"`      // 数据内容
 }
 
 // https://studygolang.com/articles/3981
@@ -38,4 +38,3 @@ type Response struct {
     Size   int32  `json:"size"`   // 数据大小
     Data   []byte `json:"data"`   // 数据内容
 }
-

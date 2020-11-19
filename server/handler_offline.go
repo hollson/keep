@@ -17,55 +17,11 @@ import (
     "github.com/sirupsen/logrus"
 )
 
-func OfflineHandler() {
 
-}
-
-
-
-// 处理消息
-func (s *server) messageHandler(conn *tcpkeepalive.Conn) {
-    // 循环读取数据
-    for {
-        var buf = make([]byte, memory.MB*4) // todo
-        n, err := conn.Read(buf)
-        if err == io.EOF {
-            s.Offline(conn, 1)
-            break
-        }
-        if err != nil {
-            logrus.Errorln(err)
-            break
-        }
-        var req *pb.Request = new(pb.Request)
-        if err := json.Unmarshal(buf[:n], req); err == nil {
-            if _, ok := s.Clients[req.UUID]; !ok {
-                s.Clients[req.UUID] = &client{
-                    uuid: req.UUID,
-                    conn: conn,
-                }
-                logrus.Infof("【%s】%s已上线,当前在线人数：%d", conn.RemoteAddr().String(), req.UUID, len(s.Clients))
-            }
-
-            switch req.Action {
-            case pb.BROADCAST:
-                s.broadCast(req, conn)
-            case pb.PRIVATE:
-                s.privateSend(req, conn)
-            case pb.RETROSPECT:
-                s.retrospect(req, conn)
-            default:
-                fmt.Println("未知的操作：", req.Action)
-            }
-        } else {
-            logrus.Errorln("Unmarshal", err)
-        }
-    }
-}
 
 // 广播
 func (s *server) broadCast(req *pb.Request, conn *tcpkeepalive.Conn) {
-    logrus.Println("广播")
+    // logrus.Println("广播")
     for _, c := range s.Clients {
         if c.conn.RemoteAddr().String() == conn.RemoteAddr().String() {
             continue
