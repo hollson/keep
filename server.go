@@ -7,16 +7,16 @@ package main
 import (
     "os"
 
-    "github.com/hollson/team/server"
+    "github.com/hollson/team/teamar"
     "github.com/sirupsen/logrus"
 )
 
 func main() {
-    server, err := server.NewServer()
+    tm, err := teamar.NewTeamar()
     if err != nil {
         logrus.Errorln(err)
         os.Exit(1)
     }
-    server.Run()
-    server.Close()
+    tm.Run()
+    tm.Close()
 }

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package server
+package teamar
 
 import (
     "time"
@@ -12,7 +12,7 @@ import (
 )
 
 // 客户长连接分配器
-func (s *server) TcpAllot() {
+func (s *teamar) TcpAllot() {
     logrus.Infoln("「Team Editor」TCP监听服务已启动：", s.Listener.Addr().String())
     for {
         // 创建客户端连接
@@ -33,8 +33,8 @@ func (s *server) TcpAllot() {
         kaConn.SetKeepAliveCount(s.KeepAliveCount)
         kaConn.SetKeepAliveInterval(time.Duration(s.KeepAliveInterval) * time.Second)
         //
-        // s.Clients[conn.RemoteAddr().String()] = &client{conn: kaConn}
-        // logrus.Infof("%s 已上线,当前在线人数：%d", conn.RemoteAddr().String(), len(s.Clients))
+        // s.Team[conn.RemoteAddr().String()] = &client{conn: kaConn}
+        // logrus.Infof("%s 已上线,当前在线人数：%d", conn.RemoteAddr().String(), len(s.Team))
         go s.TcpRoute(kaConn)
     }
 }

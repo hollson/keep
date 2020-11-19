@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package server
+package teamar
 
 import (
     "bufio"
@@ -10,8 +10,6 @@ import (
     "fmt"
     "io"
     "os"
-
-    "github.com/hollson/goox/memory"
     "github.com/hollson/team/lib/tcpkeepalive"
     "github.com/hollson/team/pb"
     "github.com/sirupsen/logrus"
@@ -20,9 +18,9 @@ import (
 
 
 // 广播
-func (s *server) broadCast(req *pb.Request, conn *tcpkeepalive.Conn) {
+func (s *teamar) broadCast(req *pb.Request, conn *tcpkeepalive.Conn) {
     // logrus.Println("广播")
-    for _, c := range s.Clients {
+    for _, c := range s.Team {
         if c.conn.RemoteAddr().String() == conn.RemoteAddr().String() {
             continue
         }
@@ -45,8 +43,8 @@ func (s *server) broadCast(req *pb.Request, conn *tcpkeepalive.Conn) {
 }
 
 // 私发
-func (s *server) privateSend(req *pb.Request, conn *tcpkeepalive.Conn) {
-    if other, ok := s.Clients[req.Receiver]; !ok {
+func (s *teamar) privateSend(req *pb.Request, conn *tcpkeepalive.Conn) {
+    if other, ok := s.Team[req.Receiver]; !ok {
         conn.Write([]byte("用户不存在或用户不在线"))
     } else if req.Receiver == req.UUID {
         conn.Write([]byte("不能自我发送"))
@@ -57,14 +55,14 @@ func (s *server) privateSend(req *pb.Request, conn *tcpkeepalive.Conn) {
 }
 
 // 溯源
-func (s *server) retrospect(req *pb.Request, conn *tcpkeepalive.Conn) {
+func (s *teamar) retrospect(req *pb.Request, conn *tcpkeepalive.Conn) {
     conn.Write([]byte("溯源"))
 }
 
 // 用户下线，1. 主动退出，2. 探测退出
-func (s *server) Offline(conn *tcpkeepalive.Conn, _type int) {
+func (s *teamar) Offline(conn *tcpkeepalive.Conn, _type int) {
     logrus.Errorf("%s已退出[%d]", conn.RemoteAddr().String(), _type)
-    delete(s.Clients, conn.RemoteAddr().String())
+    delete(s.Team, conn.RemoteAddr().String())
 }
 
 func Read2() string {

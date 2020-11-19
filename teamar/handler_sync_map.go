@@ -2,9 +2,9 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package server
+package teamar
 
-// 同步广播普通消息
-func SyncMsgHandler() {
+// 同步广播地图数据
+func SyncMapHandler() {
 
 }

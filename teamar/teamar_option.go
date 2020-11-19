@@ -2,14 +2,14 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package server
+package teamar
 
 import (
     "fmt"
     "net"
 )
 
-type Option func(h *server) error
+type Option func(h *teamar) error
 
 // host为空时,监听地址为0.0.0.0
 func WithTcpAddr(ip string, port int) Option {
@@ -20,7 +20,7 @@ func WithTcpAddr(ip string, port int) Option {
         addr = fmt.Sprintf("%s:%d", ip, port)
     }
 
-    return func(h *server) error {
+    return func(h *teamar) error {
         tcpAddr, err := net.ResolveTCPAddr("tcp4", addr)
         if err != nil {
             return fmt.Errorf("resolve tCP addr error,%v\n", err)
@@ -37,7 +37,7 @@ func WithTcpAddr(ip string, port int) Option {
 
 // 空闲多长时间开始探测(以秒为单位),默认为30s。
 func WithKeepAliveIdle(aliveIdle int) Option {
-    return func(h *server) error {
+    return func(h *teamar) error {
         if aliveIdle < 1 || aliveIdle > 3600 {
             return fmt.Errorf("keepaliveidle shuold be in 1 and 3600")
         }
@@ -48,7 +48,7 @@ func WithKeepAliveIdle(aliveIdle int) Option {
 
 // 探测总次数,默认为4次。
 func WithKeepAliveCount(aliveCount int) Option {
-    return func(h *server) error {
+    return func(h *teamar) error {
         if aliveCount < 1 || aliveCount > 10 {
             return fmt.Errorf("keepalivecount shuold be in 1 and 10")
         }
@@ -58,7 +58,7 @@ func WithKeepAliveCount(aliveCount int) Option {
 
 // 探测时间间隔(以秒为单位),默认为5秒。
 func WithKeepAliveInterval(interval int) Option {
-    return func(h *server) error {
+    return func(h *teamar) error {
         if interval < 3 || interval > 300 {
             return fmt.Errorf("keepaliveinterval shuold be in 3 and 300")
         }

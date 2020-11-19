@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package server
+package teamar
 
 import (
     "encoding/json"
@@ -16,7 +16,7 @@ import (
 )
 
 // 处理消息
-func (s *server) TcpRoute(conn *tcpkeepalive.Conn) {
+func (s *teamar) TcpRoute(conn *tcpkeepalive.Conn) {
     // 客户路由
     for {
         var buf = make([]byte, memory.MB*4) // todo
@@ -32,12 +32,12 @@ func (s *server) TcpRoute(conn *tcpkeepalive.Conn) {
 
         var req *pb.Request = new(pb.Request)
         if err := json.Unmarshal(buf[:n], req); err == nil {
-            if _, ok := s.Clients[req.UUID]; !ok {
-                s.Clients[req.UUID] = &client{ // 验证未知用户
+            if _, ok := s.Team[req.UUID]; !ok {
+                s.Team[req.UUID] = &client{ // 验证未知用户
                     uuid: req.UUID,
                     conn: conn,
                 }
-                logrus.Infof("【%s】%s已上线,当前在线人数：%d", conn.RemoteAddr().String(), req.UUID, len(s.Clients))
+                logrus.Infof("【%s】%s已上线,当前在线人数：%d", conn.RemoteAddr().String(), req.UUID, len(s.Team))
             }
 
             switch req.Uri {
