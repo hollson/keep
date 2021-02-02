@@ -12,4 +12,20 @@ protoc -I ./ \
     --java_out=./_gen/java/ \
     --php_out=./_gen/php/ \
     --python_out=./_gen/py/ \
-    ./*.proto
+    ./request.proto
+
+protoc -I ./ \
+    --go_out=plugins=grpc:./_gen/go \
+    --csharp_out=./_gen/cs/ \
+    --java_out=./_gen/java/ \
+    --php_out=./_gen/php/ \
+    --python_out=./_gen/py/ \
+    ./response.proto
+
+protoc -I ./ \
+    --go_out=plugins=grpc:./_gen/go \
+    --csharp_out=./_gen/cs/ \
+    --java_out=./_gen/java/ \
+    --php_out=./_gen/php/ \
+    --python_out=./_gen/py/ \
+    ./request222.proto

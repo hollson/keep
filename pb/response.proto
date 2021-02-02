@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+//import "include/google/protobuf/timestamp.proto";
+
+// 多语言编码设置
+option go_package = "./;pb";
+option csharp_namespace = "Reworld.Teamwork";
+option java_package = "com.reworld.www";
+option java_outer_classname = "Teamwork";
+
+// 服务端响应操作类型
+enum PongAction {
+    // 成员上线通知(带有染色等状态数据)
+    OnlineNotice = 0;
+    // 成员(主动)下线通知
+    OfflineNotice = 1;
+    // 地图分发数据(透传) packet
+    DataDistribute = 2;
+    // 地图副本数据(透传)
+    DataReplica = 3;
+    // 请求定时快照
+    Snapshot = 4;
+    // 暂停编辑(通知)
+    Hangup = 5;
+    // 销毁项目(通知)
+    Dispose = 6;
+}
+
+enum PongCode {
+    // 正常
+    ok = 0;
+    // 签名错误
+    err_sign = 1;
+    // 参数错误
+    err_param = 2;
+}
+
+message Member {
+    // 用户编号(OpenId)
+    string UUID = 1;
+    // 用户名
+    string Name = 2;
+    // 上线序列/染色(可选)
+    fixed32 Sequence = 3;
+}
+
+// 响应
+message Response {
+    // 状态码
+    PongCode Code = 1;
+    // 操作类型
+    PongAction Action = 2;
+    // 数据内容(可选),即透传数据包或Member对象
+    bytes Data = 3;
+}

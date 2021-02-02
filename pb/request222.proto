@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// 多语言编码设置
+option go_package = ".;keep";
+
+
+//Action uint16 // 消息类型(路由标识)
+//Group  uint32 // 群组编号
+//UUID   uint32 // 用户标识
+//Length uint32 // 消息长度
+//format uint8  // 数据格式
+//crc    uint32 // (私有)校验码
+//Data   []byte // 消息内容
+
+// 请求
+message Request {
+    // 所在团队编号(必填)
+    int32 Action = 1;
+    // 用户编号(必填)
+    string UUID = 2;
+}
+

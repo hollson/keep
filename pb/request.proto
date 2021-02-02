@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+// 多语言编码设置
+option go_package = ".;pb";
+option csharp_namespace = "Reworld.Teamwork";
+option java_package = "com.reworld.www";
+option java_outer_classname = "Teamwork";
+
+// 客户端请求操作类型
+enum PingAction {
+    // 心跳
+    Heartbeat = 0;
+    // 请求地图副本
+    ReqReplica = 1;
+    // 请求分发数据(副本/动作)
+    ReqDistribute = 2;
+    // 通知下线
+    Offline = 3;
+}
+
+// 请求
+message Request {
+    // 操作类型(必填)
+    PingAction Action = 1;
+    // 所在团队编号(必填)
+    int64 TeamId = 2;
+    // 用户编号(必填)
+    string UUID = 3;
+    // 时间戳(必填)
+    int64 Timestamp = 4;
+    // 签名(必填)(算法：sha256(TeamId.UUID.Timestamp.Secret))
+    string Sign = 5;
+    // 接收者(可选,为空时群发)
+    repeated string receiver = 6;
+    // 数据内容(可选)
+    bytes Data = 7;
+}
+
