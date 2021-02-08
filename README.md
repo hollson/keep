@@ -1,5 +1,5 @@
 # KEEP
-- 一个精简版的TCP聊天服务
+- keep是一个golang编写的精简版的TCP游戏/聊天服务框架
 
 ## 测试
 - 测试keepalive：
