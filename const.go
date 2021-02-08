@@ -16,7 +16,7 @@ const (
     MSG_ERR_CRC32                 // 校验失败 - (解包成功)crc失败
     MSG_ERR_LENGHT                // 长度错误 - (解包成功)消息长度错误
     MSG_ERR_GROUP                 // 群号错误 - (解包成功)
-    MSG_ERR_UUID                  // 身份错误 - (解包成功)未登录或账号错误等
+    MSG_ERR_AUTH                  // 身份错误 - (解包成功)未登录或账号错误等
     MSG_ERR_LIMIT                 // 权限错误
     MSG_ERR_SERVER                // 服务错误
     MSG_ERR_TIMEOUT               // 服务超时
@@ -30,25 +30,34 @@ func (a Format) Status() uint8 {
 // 对象序列化格式
 type Format uint8
 
+// 优选gogo/protobuf
 const (
-    FMT_BIN  Format = iota // 二进制序列化(小端模式)
+    FMT_BIN  Format = iota // 二进制序列化(小端模式)  RAW
     FMT_PB                 // Proto序列化(大端模式)
     FMT_JSON               // Json序列化
+    // BSON
+    // xml
+    RAW
+    GOB
+    // https://www.jb51.net/article/198069.htm
+    // https://studygolang.com/articles/2552
+    // https://studygolang.com/articles/9312
+// "github.com/golang/snappy"
 )
 
 func (a Format) Uint8() uint8 {
     return uint8(a)
 }
 
-// 动作类型
-type Act uint32
-
-const (
-    // ACT_TIP Act = iota+1 // 提示
-    // ACT_ERR            // 错误
-    // ACT_CMD            // 命令
-)
-
-func (a Act) Uint32() uint32 {
-    return uint32(a)
-}
+// // 动作类型
+// type Act uint32
+//
+// const (
+//     // ACT_TIP Act = iota+1 // 提示
+//     // ACT_ERR            // 错误
+//     // ACT_CMD            // 命令
+// )
+//
+// func (a Act) Uint32() uint32 {
+//     return uint32(a)
+// }

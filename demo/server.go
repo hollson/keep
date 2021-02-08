@@ -12,8 +12,7 @@ var server *keep.Server
 
 func main() {
     // 创建默认服务或带有初始项的服务
-    server = keep.Default()
-    // server = keep.NewServer(keep.WithKeepAlive(10, 3, 5))
+    server = keep.NewServer()
 
     // 添加中间件
     server.Use(func(ctx *keep.Context) {
@@ -34,7 +33,8 @@ func main() {
     }
 
     // 启动服务
-    server.Run(":4321")
+    server.Run()
+    // server.Run(":4321")
 }
 
 // 处理程序 - 用户登录

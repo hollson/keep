@@ -19,7 +19,7 @@ var (
 
 //go:generate go run client.go
 func main() {
-    TcpAdd, _ := net.ResolveTCPAddr("tcp", ":4321")
+    TcpAdd, _ := net.ResolveTCPAddr("tcp", ":9980")
     conn, err := net.DialTCP("tcp", nil, TcpAdd)
     if err != nil {
         fmt.Println("TCP拨号失败,", err)
@@ -90,7 +90,7 @@ func TcpWriter(conn *net.TCPConn) {
 func testText() []byte {
     mps := map[int]string{
         1: "hello world",
-        2: "logrus.Errorf",
+        2: "hello golang",
         3: "发送数据 😊",
         4: "12345",
         5: "Unmarshal",

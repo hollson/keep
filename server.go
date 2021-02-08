@@ -34,9 +34,9 @@ type keepAlive struct {
     interval time.Duration // 「TCP探测」探测间隔
 }
 
-// 创建默认Server服务
-func Default() *Server {
-    return &Server{
+// 创建Server服务
+func NewServer(opts ...Option) *Server {
+    var server = &Server{
         router:     make(map[uint32][]HandlerFunc),
         middleware: make([]HandlerFunc, 0),
         keepAlive: keepAlive{
@@ -45,11 +45,6 @@ func Default() *Server {
             interval: 3,
         },
     }
-}
-
-// 创建Server服务(可设置初始项)
-func NewServer(opts ...Option) *Server {
-    var server = Default()
     for _, f := range opts {
         f(server)
     }
@@ -57,14 +52,18 @@ func NewServer(opts ...Option) *Server {
 }
 
 // 添加路由
-//  act：动作编号(0～100为系统保留操作类型)
+//  act：动作编号(0为系统保留)
 //  fs：处理查询
 func (s *Server) AddRoute(act uint32, fs ...HandlerFunc) {
-    if act < 101 {
-        logrus.Errorf("action[%s] can not be used, 0~100 is system retention action", act)
+    // if act < 101 {
+    //     logrus.Errorf("action[%s] can not be used, 0~100 is system retention action", act)
+    //     return
+    // }
+    if act > 0 {
+        s.router[act] = append(s.router[act], fs...)
         return
     }
-    s.router[act] = append(s.router[act], fs...)
+    logrus.Panic("action must be large then 0")
 }
 
 // 加载中间件
@@ -77,7 +76,7 @@ func (s *Server) Use(f HandlerFunc) {
 //     compress = true
 // }
 
-// example: s.Run(":9980"), 默认端口:9980
+// 启动服务，如: s.Run(":9980"), 默认端口:9980
 func (s *Server) Run(addr ...string) error {
     var _addr string
     switch len(addr) {
